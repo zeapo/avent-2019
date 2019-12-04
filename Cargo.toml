@@ -8,8 +8,8 @@ edition = "2018"
 name = "one"
 path = "src/one.rs"
 
-#[[bin]]
-#name = "two"
-#path = "src/two.rs"
+[[bin]]
+name = "two"
+path = "src/two.rs"
 
 [dependencies]

@@ -1,9 +1,4 @@
 fn main() {
-    let total = total_mass();
-    println!("Total = {}", total);
-}
-
-pub fn total_mass() -> i64 {
     let modules = vec![
         112908, 61769, 65967, 51494, 99689, 114098, 135346, 59561, 147324, 50465, 117491, 77845,
         91959, 59847, 84013, 85763, 62121, 58965, 89809, 97870, 77696, 70218, 118404, 83505, 141729,
@@ -15,16 +10,33 @@ pub fn total_mass() -> i64 {
         121023, 52904, 120927, 87164, 133709, 89427, 105350, 106378, 98492, 78394, 145200
     ];
 
-     modules.iter().fold(0, |acc, mass| acc + required_fuel(*mass))
+    let mut fuel = modules.iter().fold(0, |acc, mass| acc + required_fuel(*mass));
+    println!("part 1 - Total fuel = {}", fuel);
+
+    fuel = modules.iter().fold(0, |acc, mass| acc + total_fuel(required_fuel(*mass)));
+    println!("part 2 - Total fuel = {}", fuel);
 }
 
-pub fn required_fuel(mass: i64) -> i64 {
+fn required_fuel(mass: i64) -> i64 {
     (mass / 3) - 2
+}
+
+fn total_fuel(fuel: i64) -> i64 {
+    let mut total_fuel = fuel;
+    let mut current = fuel;
+    loop {
+        current = required_fuel(current);
+        if current <= 0 {
+            break
+        }
+        total_fuel += current
+    }
+    return total_fuel
 }
 
 #[cfg(test)]
 mod test {
-    use crate::one::required_fuel;
+    use crate::{required_fuel, total_fuel};
 
     #[test]
     fn test_required_fuel() {
@@ -32,5 +44,12 @@ mod test {
         assert_eq!(required_fuel(14), 2);
         assert_eq!(required_fuel(1969), 654);
         assert_eq!(required_fuel(100756), 33583);
+    }
+
+    #[test]
+    fn test_total_fuel_mass() {
+        assert_eq!(total_fuel(2), 2);
+        assert_eq!(total_fuel(654), 966);
+        assert_eq!(total_fuel(33583), 50346);
     }
 }
